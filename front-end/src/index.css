@@ -55,7 +55,98 @@
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M0 0 L0 24 L7 17 L12 28 L17 26 L12 15 L21 15 Z" fill="white" stroke="black" stroke-width="2"/></svg>'), pointer !important;
 }
 
-/* Base Styles */
+/* Game Styles */
+.game-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--border-color);
+}
+
+.game-intro {
+  text-align: center;
+}
+
+.question-card {
+  margin-top: 1rem;
+}
+
+.question-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+.options-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.option-btn {
+  width: 100%;
+  padding: 1.25rem;
+  text-align: left;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  font-family: inherit;
+  color: var(--text-color);
+}
+
+.option-btn:hover {
+  border-color: var(--primary-color);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.option-btn:focus {
+  outline: 4px solid var(--primary-color);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.option-btn.selected {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  color: white;
+}
+
+[data-high-contrast="true"] .option-btn.selected {
+  background: var(--primary-color);
+  color: #000;
+  border-color: #fff;
+}
+
+.game-progress {
+  margin-bottom: 2rem;
+  height: 8px;
+  background: var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.game-results {
+  text-align: center;
+}
+
+.score-display {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin: 1.5rem 0;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -298,4 +389,16 @@ input.invalid {
 
 .a11y-btn:hover {
   background: var(--border-color);
+}
+
+.a11y-btn.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+[data-high-contrast="true"] .a11y-btn.active {
+  background: var(--primary-color);
+  color: black;
+  border-color: white;
 }

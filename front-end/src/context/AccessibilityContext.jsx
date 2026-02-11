@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AccessibilityContext = createContext();
 
-const AccessibilityProvider = ({ children }) => {
+export const AccessibilityProvider = ({ children }) => {
     const [highContrast, setHighContrast] = useState(false);
     const [fontScale, setFontScale] = useState(1);
     const [dyslexicFont, setDyslexicFont] = useState(false);
