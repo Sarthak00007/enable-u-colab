@@ -30,6 +30,31 @@
   --focus-ring: #ffffff;
 }
 
+/* Dyslexic Font */
+[data-dyslexic="true"] {
+  --font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
+}
+
+/* Reduced Motion */
+[data-reduced-motion="true"] * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* Large Cursor */
+[data-large-cursor="true"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M0 0 L0 24 L7 17 L12 28 L17 26 L12 15 L21 15 Z" fill="white" stroke="black" stroke-width="2"/></svg>'), auto !important;
+}
+
+[data-large-cursor="true"] button,
+[data-large-cursor="true"] a,
+[data-large-cursor="true"] input {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M0 0 L0 24 L7 17 L12 28 L17 26 L12 15 L21 15 Z" fill="white" stroke="black" stroke-width="2"/></svg>'), pointer !important;
+}
+
 /* Base Styles */
 * {
   box-sizing: border-box;
@@ -211,6 +236,50 @@ input.invalid {
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   border: 2px solid var(--border-color);
   z-index: 1000;
+}
+
+.a11y-toast {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 2000;
+  font-weight: 600;
+  pointer-events: none;
+  animation: toastFade 3s ease forwards;
+}
+
+[data-high-contrast="true"] .a11y-toast {
+  background: var(--primary-color);
+  color: #000;
+  border: 2px solid white;
+}
+
+@keyframes toastFade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  90% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
 }
 
 .a11y-btn {

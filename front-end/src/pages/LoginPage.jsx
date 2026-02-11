@@ -4,8 +4,10 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import AuthLayout from '../components/layout/AuthLayout';
 import { useLogin } from '../hooks/useAuth';
+import usePageTitle from '../hooks/usePageTitle';
 
 const LoginPage = () => {
+    usePageTitle('Login');
     const navigate = useNavigate();
     const loginMutation = useLogin();
 

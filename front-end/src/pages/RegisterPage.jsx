@@ -4,8 +4,10 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import AuthLayout from '../components/layout/AuthLayout';
 import { useRegister } from '../hooks/useAuth';
+import usePageTitle from '../hooks/usePageTitle';
 
 const RegisterPage = () => {
+    usePageTitle('Register');
     const navigate = useNavigate();
     const registerMutation = useRegister();
 
@@ -18,20 +20,19 @@ const RegisterPage = () => {
         },
         validationSchema: Yup.object({
             fullName: Yup.string()
-                .min(2, 'Name muts be at least 2 characters')
+                .min(2, 'Name must be at least 2 characters')
                 .required('Full name is required'),
             email: Yup.string()
-                .email('Inavlid email address')
+                .email('Invalid email address')
                 .required('Email is required'),
             password: Yup.string()
                 .min(6, 'Password must be at least 6 characters')
                 .required('Password is required'),
             confirmPassword: Yup.string()
-                .oneOf([Yup.ref('password'), null], 'Passwrods must match')
+                .oneOf([Yup.ref('password'), null], 'Passwords must match')
                 .required('Confirm password is required'),
         }),
         onSubmit: (values) => {
-            // Don't send confirmPassword to API
             const { confirmPassword, ...registerData } = values;
             registerMutation.mutate(registerData, {
                 onSuccess: () => {

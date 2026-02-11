@@ -4,8 +4,10 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import AuthLayout from '../components/layout/AuthLayout';
 import { useForgotPassword } from '../hooks/useAuth';
+import usePageTitle from '../hooks/usePageTitle';
 
 const ForgotPasswordPage = () => {
+    usePageTitle('Reset Password');
     const forgotMutation = useForgotPassword();
 
     const formik = useFormik({
