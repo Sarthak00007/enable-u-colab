@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import AuthLayout from '../components/layout/AuthLayout';
 import { useForgotPassword } from '../hooks/useAuth';
 
 const ForgotPasswordPage = () => {
-    const [email, setEmail] = useState('');
     const forgotMutation = useForgotPassword();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        forgotMutation.mutate(email, {
-            onSuccess: () => {
-                alert('Reset link sent! Please check your email.');
-            },
-        });
-    };
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+        },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .email('Invalid email address')
+                .required('Email is required'),
+        }),
+        onSubmit: (values) => {
+            forgotMutation.mutate(values.email);
+        },
+    });
 
     return (
         <AuthLayout title="Reset Password">
@@ -22,7 +28,7 @@ const ForgotPasswordPage = () => {
                 Enter your email address and we'll send you a link to reset your password.
             </p>
 
-            <form onSubmit={handleSubmit} aria-labelledby="auth-title">
+            <form onSubmit={formik.handleSubmit} aria-labelledby="auth-title" noValidate>
                 {forgotMutation.isError && (
                     <div className="error-message" role="alert">
                         {forgotMutation.error?.response?.data?.message || 'Failed to send reset link.'}
@@ -30,7 +36,7 @@ const ForgotPasswordPage = () => {
                 )}
 
                 {forgotMutation.isSuccess && (
-                    <div className="success-message" role="alert" style={{ color: 'green', marginBottom: '1rem' }}>
+                    <div className="success-message" role="alert">
                         Check your email for the reset link!
                     </div>
                 )}
@@ -40,20 +46,25 @@ const ForgotPasswordPage = () => {
                     <input
                         type="email"
                         id="email"
-                        className="form-control"
+                        name="email"
+                        className={`form-control ${formik.touched.email && formik.errors.email ? 'invalid' : ''}`}
                         required
                         autoComplete="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        {...formik.getFieldProps('email')}
                         aria-required="true"
+                        aria-invalid={formik.touched.email && !!formik.errors.email}
+                        aria-describedby={formik.touched.email && formik.errors.email ? 'email-error' : undefined}
                         disabled={forgotMutation.isPending}
                     />
+                    {formik.touched.email && formik.errors.email && (
+                        <div id="email-error" className="error-text" role="alert">{formik.errors.email}</div>
+                    )}
                 </div>
 
                 <button
                     type="submit"
                     className="btn"
-                    disabled={forgotMutation.isPending}
+                    disabled={forgotMutation.isPending || !formik.isValid}
                 >
                     {forgotMutation.isPending ? 'Sending...' : 'Send Reset Link'}
                 </button>

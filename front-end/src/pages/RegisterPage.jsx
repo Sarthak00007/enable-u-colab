@@ -1,33 +1,50 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import AuthLayout from '../components/layout/AuthLayout';
 import { useRegister } from '../hooks/useAuth';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        fullName: '',
-        email: '',
-        password: ''
-    });
     const registerMutation = useRegister();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        registerMutation.mutate(formData, {
-            onSuccess: () => {
-                alert('Registration successful! Please login.');
-                navigate('/login');
-            },
-            onError: (error) => {
-                console.error('Registration failed:', error);
-            }
-        });
-    };
+    const formik = useFormik({
+        initialValues: {
+            fullName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+        },
+        validationSchema: Yup.object({
+            fullName: Yup.string()
+                .min(2, 'Name muts be at least 2 characters')
+                .required('Full name is required'),
+            email: Yup.string()
+                .email('Inavlid email address')
+                .required('Email is required'),
+            password: Yup.string()
+                .min(6, 'Password must be at least 6 characters')
+                .required('Password is required'),
+            confirmPassword: Yup.string()
+                .oneOf([Yup.ref('password'), null], 'Passwrods must match')
+                .required('Confirm password is required'),
+        }),
+        onSubmit: (values) => {
+            // Don't send confirmPassword to API
+            const { confirmPassword, ...registerData } = values;
+            registerMutation.mutate(registerData, {
+                onSuccess: () => {
+                    alert('Registration successful! Please login.');
+                    navigate('/login');
+                },
+            });
+        },
+    });
 
     return (
         <AuthLayout title="Create Account">
-            <form onSubmit={handleSubmit} aria-labelledby="auth-title">
+            <form onSubmit={formik.handleSubmit} aria-labelledby="auth-title" noValidate>
                 {registerMutation.isError && (
                     <div className="error-message" role="alert">
                         {registerMutation.error?.response?.data?.message || 'Registration failed. Please try again.'}
@@ -39,14 +56,19 @@ const RegisterPage = () => {
                     <input
                         type="text"
                         id="fullName"
-                        className="form-control"
+                        name="fullName"
+                        className={`form-control ${formik.touched.fullName && formik.errors.fullName ? 'invalid' : ''}`}
                         required
                         autoComplete="name"
-                        value={formData.fullName}
-                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                        {...formik.getFieldProps('fullName')}
                         aria-required="true"
+                        aria-invalid={formik.touched.fullName && !!formik.errors.fullName}
+                        aria-describedby={formik.touched.fullName && formik.errors.fullName ? 'name-error' : undefined}
                         disabled={registerMutation.isPending}
                     />
+                    {formik.touched.fullName && formik.errors.fullName && (
+                        <div id="name-error" className="error-text" role="alert">{formik.errors.fullName}</div>
+                    )}
                 </div>
 
                 <div className="form-group">
@@ -54,14 +76,19 @@ const RegisterPage = () => {
                     <input
                         type="email"
                         id="email"
-                        className="form-control"
+                        name="email"
+                        className={`form-control ${formik.touched.email && formik.errors.email ? 'invalid' : ''}`}
                         required
                         autoComplete="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        {...formik.getFieldProps('email')}
                         aria-required="true"
+                        aria-invalid={formik.touched.email && !!formik.errors.email}
+                        aria-describedby={formik.touched.email && formik.errors.email ? 'email-error' : undefined}
                         disabled={registerMutation.isPending}
                     />
+                    {formik.touched.email && formik.errors.email && (
+                        <div id="email-error" className="error-text" role="alert">{formik.errors.email}</div>
+                    )}
                 </div>
 
                 <div className="form-group">
@@ -69,20 +96,45 @@ const RegisterPage = () => {
                     <input
                         type="password"
                         id="password"
-                        className="form-control"
+                        name="password"
+                        className={`form-control ${formik.touched.password && formik.errors.password ? 'invalid' : ''}`}
                         required
                         autoComplete="new-password"
-                        value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        {...formik.getFieldProps('password')}
                         aria-required="true"
+                        aria-invalid={formik.touched.password && !!formik.errors.password}
+                        aria-describedby={formik.touched.password && formik.errors.password ? 'password-error' : undefined}
                         disabled={registerMutation.isPending}
                     />
+                    {formik.touched.password && formik.errors.password && (
+                        <div id="password-error" className="error-text" role="alert">{formik.errors.password}</div>
+                    )}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="confirmPassword">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        className={`form-control ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'invalid' : ''}`}
+                        required
+                        autoComplete="new-password"
+                        {...formik.getFieldProps('confirmPassword')}
+                        aria-required="true"
+                        aria-invalid={formik.touched.confirmPassword && !!formik.errors.confirmPassword}
+                        aria-describedby={formik.touched.confirmPassword && formik.errors.confirmPassword ? 'confirm-password-error' : undefined}
+                        disabled={registerMutation.isPending}
+                    />
+                    {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+                        <div id="confirm-password-error" className="error-text" role="alert">{formik.errors.confirmPassword}</div>
+                    )}
                 </div>
 
                 <button
                     type="submit"
                     className="btn"
-                    disabled={registerMutation.isPending}
+                    disabled={registerMutation.isPending || !formik.isValid}
                 >
                     {registerMutation.isPending ? 'Registering...' : 'Register'}
                 </button>

@@ -1,28 +1,39 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import AuthLayout from '../components/layout/AuthLayout';
 import { useLogin } from '../hooks/useAuth';
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ email: '', password: '' });
     const loginMutation = useLogin();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        loginMutation.mutate(formData, {
-            onSuccess: () => {
-                navigate('/dashboard'); // or wherever you want to redirect
-            },
-            onError: (error) => {
-                console.error('Login failed:', error);
-            }
-        });
-    };
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .email('Invalid email address')
+                .required('Email is required'),
+            password: Yup.string()
+                .min(6, 'Password must be at least 6 characters')
+                .required('Password is required'),
+        }),
+        onSubmit: (values) => {
+            loginMutation.mutate(values, {
+                onSuccess: () => {
+                    navigate('/dashboard');
+                },
+            });
+        },
+    });
 
     return (
         <AuthLayout title="Login">
-            <form onSubmit={handleSubmit} aria-labelledby="auth-title">
+            <form onSubmit={formik.handleSubmit} aria-labelledby="auth-title" noValidate>
                 {loginMutation.isError && (
                     <div className="error-message" role="alert">
                         {loginMutation.error?.response?.data?.message || 'Invalid email or password'}
@@ -34,14 +45,19 @@ const LoginPage = () => {
                     <input
                         type="email"
                         id="email"
-                        className="form-control"
+                        name="email"
+                        className={`form-control ${formik.touched.email && formik.errors.email ? 'invalid' : ''}`}
                         required
                         autoComplete="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        {...formik.getFieldProps('email')}
                         aria-required="true"
+                        aria-invalid={formik.touched.email && !!formik.errors.email}
+                        aria-describedby={formik.touched.email && formik.errors.email ? 'email-error' : undefined}
                         disabled={loginMutation.isPending}
                     />
+                    {formik.touched.email && formik.errors.email && (
+                        <div id="email-error" className="error-text" role="alert">{formik.errors.email}</div>
+                    )}
                 </div>
 
                 <div className="form-group">
@@ -49,20 +65,25 @@ const LoginPage = () => {
                     <input
                         type="password"
                         id="password"
-                        className="form-control"
+                        name="password"
+                        className={`form-control ${formik.touched.password && formik.errors.password ? 'invalid' : ''}`}
                         required
                         autoComplete="current-password"
-                        value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        {...formik.getFieldProps('password')}
                         aria-required="true"
+                        aria-invalid={formik.touched.password && !!formik.errors.password}
+                        aria-describedby={formik.touched.password && formik.errors.password ? 'password-error' : undefined}
                         disabled={loginMutation.isPending}
                     />
+                    {formik.touched.password && formik.errors.password && (
+                        <div id="password-error" className="error-text" role="alert">{formik.errors.password}</div>
+                    )}
                 </div>
 
                 <button
                     type="submit"
                     className="btn"
-                    disabled={loginMutation.isPending}
+                    disabled={loginMutation.isPending || !formik.isValid}
                 >
                     {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
                 </button>

@@ -187,6 +187,17 @@ body {
   font-size: 0.875rem;
 }
 
+.error-text {
+  color: var(--error-color);
+  font-size: 0.8125rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+input.invalid {
+  border-color: var(--error-color);
+}
+
 /* Accessibility Toolbar */
 .a11y-toolbar {
   position: fixed;
