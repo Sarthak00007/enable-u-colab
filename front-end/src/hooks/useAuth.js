@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { authService } from '../services/authService';
 
 export const useLogin = () => {
@@ -22,5 +22,19 @@ export const useRegister = () => {
 export const useForgotPassword = () => {
     return useMutation({
         mutationFn: (email) => authService.forgotPassword(email),
+    });
+};
+
+export const useStats = () => {
+    return useQuery({
+        queryKey: ['userStats'],
+        queryFn: authService.getUserStats,
+    });
+};
+
+export const useLeaderboard = () => {
+    return useQuery({
+        queryKey: ['leaderboard'],
+        queryFn: authService.getLeaderboard,
     });
 };

@@ -19,5 +19,15 @@ export const authService = {
     logout: () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+    },
+
+    getUserStats: async () => {
+        const response = await api.get('/auth/stats');
+        return response.data;
+    },
+
+    getLeaderboard: async () => {
+        const response = await api.get('/auth/leaderboard');
+        return response.data;
     }
 };

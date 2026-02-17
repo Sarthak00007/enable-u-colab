@@ -147,6 +147,167 @@
   margin: 1.5rem 0;
 }
 
+/* Dashboard Styles */
+.dashboard-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.welcome-section h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.stat-value {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-weight: 600;
+  color: var(--text-color);
+  opacity: 0.8;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+}
+
+.dashboard-sections {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leaderboard-section {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.leaderboard-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0 0;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.leaderboard-item:last-child {
+  border-bottom: none;
+}
+
+.rank-badge {
+  width: 28px;
+  height: 28px;
+  background: var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-right: 1rem;
+}
+
+.rank-1 .rank-badge {
+  background: #ffd700;
+  color: #000;
+}
+
+.rank-2 .rank-badge {
+  background: #c0c0c0;
+  color: #000;
+}
+
+.rank-3 .rank-badge {
+  background: #cd7f32;
+  color: #000;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.user-score {
+  font-weight: 800;
+  color: var(--primary-color);
+}
+
+.action-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.game-promo-card {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.game-promo-card h2 {
+  margin-top: 0;
+}
+
+.game-promo-card .btn {
+  background: white;
+  color: var(--primary-color);
+  margin-top: 1rem;
+}
+
+.game-promo-card .btn:hover {
+  background: #f1f5f9;
+}
+
 * {
   box-sizing: border-box;
 }
